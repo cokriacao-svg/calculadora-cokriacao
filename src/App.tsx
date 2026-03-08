@@ -5,31 +5,34 @@ import { Config } from './pages/Config';
 import { Dashboard } from './pages/Dashboard';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { NewProject } from './pages/NewProject';
+import { safeGetItem, safeSetItem } from './utils/storage';
 
 function Home() {
   const navigate = useNavigate();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [hasLead, setHasLead] = useState(() => {
-    return !!localStorage.getItem('arquitetura_lead');
+    return !!safeGetItem('arquitetura_lead');
   });
 
   const handleAcessar = (e: React.FormEvent) => {
     e.preventDefault();
     if (!hasLead) {
-      if (!nome || !email) {
-        alert('Por favor, preencha nome e e-mail para continuar.');
+      if (!nome || !email || !telefone) {
+        alert('Por favor, preencha todos os campos para continuar.');
         return;
       }
       
       const leadData = {
         nome,
         email,
+        telefone,
         data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
       };
       
-      localStorage.setItem('arquitetura_lead', JSON.stringify(leadData));
+      safeSetItem('arquitetura_lead', JSON.stringify(leadData));
       
       // Enviando para a Planilha do Google via SheetDB
       fetch('https://sheetdb.io/api/v1/st6ng7s2ztxs9', {
@@ -58,11 +61,11 @@ function Home() {
         </div>
         
         <h1 className="text-3xl font-serif text-graphite mb-3">
-          Calculadora Eficiente - Designers, Arquitetos e Gestores
+          Calculadora Eficiente para Designers, Arquitetos e Gestores
         </h1>
         
         <p className="text-gray-500 mb-8 font-sans text-lg">
-          O sistema definitivo para transformar a forma como você precifica seus projetos e gerencia seu escritório.
+          Definitivo para transformar a forma como você precifica seus projetos e gerencia seu negócio.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-10">
@@ -96,6 +99,18 @@ function Home() {
                 value={nome}
                 onChange={e => setNome(e.target.value)}
                 placeholder="Ex: Roberto Carlos"
+                className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:outline-none focus:border-accentNavy font-sans text-sm"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp / Telefone</label>
+              <input 
+                type="tel" 
+                required
+                value={telefone}
+                onChange={e => setTelefone(e.target.value)}
+                placeholder="(11) 90000-0000"
                 className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:outline-none focus:border-accentNavy font-sans text-sm"
               />
             </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card } from '../components/ui/Card';
-import { getOrcamentos, deleteOrcamento, updateOrcamentoStatus, type Orcamento } from '../utils/storage';
+import { getOrcamentos, deleteOrcamento, updateOrcamentoStatus, type Orcamento, safeGetItem, safeSetItem } from '../utils/storage';
 
 // Componentes estáticos de UX
 import { Briefcase, TrendingUp, Wallet } from 'lucide-react';
@@ -12,13 +12,13 @@ export function Dashboard() {
   
   // States para Faturamento
   const [metaFaturamento, setMetaFaturamento] = useState<number>(() => {
-    const savedMeta = localStorage.getItem('arquitetura_meta_faturamento');
+    const savedMeta = safeGetItem('arquitetura_meta_faturamento');
     return savedMeta ? Number(savedMeta) : 20000;
   });
   const [isEditingMeta, setIsEditingMeta] = useState(false);
 
   const handleSaveMeta = () => {
-    localStorage.setItem('arquitetura_meta_faturamento', metaFaturamento.toString());
+    safeSetItem('arquitetura_meta_faturamento', metaFaturamento.toString());
     setIsEditingMeta(false);
   };
 
