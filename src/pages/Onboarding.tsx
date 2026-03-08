@@ -3,6 +3,7 @@ import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 
 import { useNavigate } from 'react-router-dom';
+import { safeSetItem } from '../utils/storage';
 
 export function Onboarding() {
   const navigate = useNavigate();
@@ -18,7 +19,9 @@ export function Onboarding() {
   };
 
   const handleFinish = () => {
-    console.log('Setup Finalizado', formData);
+    safeSetItem('arquitetura_setup_completed', 'true');
+    if (formData.fixedCosts) safeSetItem('arquitetura_custos_fixos', formData.fixedCosts.toString());
+    safeSetItem('arquitetura_meta_faturamento', formData.revenueGoal.toString() || '20000');
     navigate('/dashboard');
   };
 
@@ -33,10 +36,10 @@ export function Onboarding() {
         {/* Header Progress */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-serif text-graphite mb-3">
-            Estruture seu Negócio
+            Base Financeira do Negócio
           </h1>
           <p className="text-gray-500 font-sans">
-            "Você não é apenas um prestador de serviços. Você é um empresário."
+            "Entenda quanto custa manter sua operação ativa e tome decisões mais seguras sobre preço, margem e lucro."
           </p>
           
           <div className="flex justify-center gap-2 mt-8">
@@ -56,9 +59,9 @@ export function Onboarding() {
           <div className="mb-8">
             {step === 1 && (
               <div className="animation-fade-in">
-                <h2 className="text-xl font-serif text-graphite mb-6">Custos Fixos Mensais</h2>
+                <h2 className="text-xl font-serif text-graphite mb-6">Base Financeira do Negócio</h2>
                 <p className="text-sm text-gray-500 mb-6 font-sans">
-                  Qual é o valor mínimo necessário para manter seu escritório operando (software, contabilidade, internet, pro-labore etc)?
+                  Entenda quanto custa manter sua operação ativa e tome decisões mais seguras sobre preço, margem e lucro.
                 </p>
                 <div className="relative">
                   <span className="absolute left-4 top-[42px] text-gray-400 font-medium">R$</span>
@@ -76,9 +79,9 @@ export function Onboarding() {
 
             {step === 2 && (
               <div className="animation-fade-in">
-                <h2 className="text-xl font-serif text-graphite mb-6">Meta de Faturamento</h2>
+                <h2 className="text-xl font-serif text-graphite mb-6">Meta de faturamento</h2>
                 <p className="text-sm text-gray-500 mb-6 font-sans">
-                  Considerando impostos e lucro desejado, quanto o seu escritório precisa faturar por mês para ser saudável?
+                  Defina quanto seu negócio precisa faturar para cobrir a estrutura, gerar lucro e crescer com mais clareza.
                 </p>
                 <div className="relative">
                   <span className="absolute left-4 top-[42px] text-gray-400 font-medium">R$</span>
@@ -96,9 +99,9 @@ export function Onboarding() {
 
             {step === 3 && (
               <div className="animation-fade-in">
-                <h2 className="text-xl font-serif text-graphite mb-6">Reserva de Emergência</h2>
+                <h2 className="text-xl font-serif text-graphite mb-6">Margem de segurança</h2>
                 <p className="text-sm text-gray-500 mb-6 font-sans">
-                  A arquitetura e design têm meses de "vales" inevitáveis. Para evitar decisões de desespero, quantos meses de caixa você quer guardar?
+                  Estabeleça uma reserva de emergência para manter o negócio saudável mesmo nos meses mais desafiadores.
                 </p>
                 
                 <div className="grid grid-cols-2 gap-4">

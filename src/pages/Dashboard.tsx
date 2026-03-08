@@ -65,6 +65,9 @@ export function Dashboard() {
           <a href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }} className="flex items-center gap-3 px-4 py-3 bg-surface text-accentNavy rounded-xl font-medium font-sans">
             <TrendingUp size={20} /> Dashboard
           </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/onboarding'); }} className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-surface hover:text-graphite rounded-xl font-medium font-sans transition-colors">
+            <Wallet size={20} /> Ajustar Base Financeira
+          </a>
         </nav>
       </aside>
 
@@ -75,13 +78,13 @@ export function Dashboard() {
           <header className="flex justify-between items-end mb-10">
             <div>
               <h1 className="text-3xl font-serif text-graphite mb-2">Visão Geral</h1>
-              <p className="text-gray-500 font-sans">Acompanhe a saúde financeira dos seus projetos.</p>
+              <p className="text-gray-500 font-sans">Acompanhe sua jornada de ofertas e vendas.</p>
             </div>
             <button 
               onClick={() => navigate('/new-project')}
               className="bg-accentNavy text-white px-6 py-2.5 rounded-xl font-medium font-sans hover:bg-graphite transition-colors shadow-sm flex items-center gap-2"
             >
-              <span className="text-xl leading-none">+</span> Novo Orçamento
+              <span className="text-xl leading-none">+</span> Nova Prospecção
             </button>
           </header>
 
@@ -90,7 +93,7 @@ export function Dashboard() {
             <Card>
               <div className="flex items-center gap-3 mb-4 text-gray-500">
                 <TrendingUp size={20} />
-                <h3 className="font-sans font-medium text-sm text-graphite flex-1">Faturamento Planejado</h3>
+                <h3 className="font-sans font-medium text-sm text-graphite flex-1">Meta de faturamento</h3>
                 <button 
                   onClick={() => setIsEditingMeta(!isEditingMeta)}
                   className="text-xs text-accentNavy hover:text-accentGold transition-colors font-medium border border-gray-200 px-2 py-1 rounded-md bg-white"
@@ -138,7 +141,7 @@ export function Dashboard() {
             <Card className="flex flex-col h-full bg-surface/50 border-gray-100">
               <div className="flex items-center gap-3 mb-4 text-gray-500">
                 <Wallet size={20} />
-                <h3 className="font-sans font-medium text-sm text-graphite flex-1">Caixa (Entradas Previstas)</h3>
+                <h3 className="font-sans font-medium text-sm text-graphite flex-1">Margem de segurança</h3>
               </div>
               <div className="text-3xl font-serif text-green-700 mb-2">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(faturamentoAtual)}
@@ -176,6 +179,7 @@ export function Dashboard() {
               <Briefcase size={20} />
               <h3 className="font-sans font-medium text-sm text-graphite">CRM de Vendas (Pipeline)</h3>
             </div>
+            <p className="text-sm text-gray-500 font-sans mb-6">Acompanhe sua prospecção</p>
             
             <div className="flex justify-between items-start min-w-[600px] px-4">
               {[
@@ -185,7 +189,14 @@ export function Dashboard() {
                 { label: 'Negociação', count: crmStatus.negociacao, color: 'bg-orange-50 text-orange-600 border-orange-200', barCol: 'bg-orange-200' },
                 { label: 'Fechamento', count: crmStatus.fechamento, color: 'bg-green-50 text-green-700 border-green-200', barCol: 'bg-green-200' },
               ].map((fase, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center relative">
+                <div 
+                  key={idx} 
+                  className="flex-1 flex flex-col items-center relative cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => {
+                    const row = document.getElementById('history-table');
+                    if (row) row.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   {/* Linha conectora */}
                   {idx < 4 && (
                     <div className={`absolute top-5 left-[50%] right-[-50%] h-1 z-0 ${fase.count > 0 ? fase.barCol : 'bg-gray-100'}`}></div>
@@ -201,12 +212,15 @@ export function Dashboard() {
           </Card>
 
           {/* Histórico de Orçamentos */}
-          <div className="mt-10">
+          <div className="mt-10" id="history-table">
             <div className="flex justify-between items-end mb-6">
               <h2 className="text-xl font-serif text-graphite mb-1">Histórico de Orçamentos</h2>
               <button 
                 className="text-sm font-sans font-medium text-accentGold hover:text-yellow-600 transition-colors"
-                onClick={() => navigate('/new-project')}
+                onClick={() => {
+                  const row = document.getElementById('history-table');
+                  if (row) row.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Ver Relatório Completo &rarr;
               </button>
@@ -230,7 +244,7 @@ export function Dashboard() {
                     {orcamentos.length === 0 ? (
                       <tr>
                         <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                          Nenhum orçamento gerado ainda. Clique em "Novo Orçamento".
+                          Nenhum orçamento gerado ainda. Clique em "Nova Prospecção".
                         </td>
                       </tr>
                     ) : (

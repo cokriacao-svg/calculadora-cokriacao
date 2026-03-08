@@ -16,6 +16,8 @@ function Home() {
   const [hasLead, setHasLead] = useState(() => {
     return !!safeGetItem('arquitetura_lead');
   });
+  
+  const hasSetupComplete = !!safeGetItem('arquitetura_setup_completed');
 
   const handleAcessar = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +52,11 @@ function Home() {
       
       setHasLead(true);
     }
-    navigate('/onboarding');
+    if (hasSetupComplete) {
+      navigate('/dashboard');
+    } else {
+      navigate('/onboarding');
+    }
   };
 
   return (
@@ -92,7 +98,7 @@ function Home() {
             <h4 className="font-serif text-xl text-graphite mb-4 text-center">Identifique-se para acessar</h4>
             
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Seu Nome Completo</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
               <input 
                 type="text" 
                 required
@@ -137,7 +143,10 @@ function Home() {
         ) : (
           <button 
             onClick={() => {
-              if (hasLead) navigate('/onboarding');
+              if (hasLead) {
+                if (hasSetupComplete) navigate('/dashboard');
+                else navigate('/onboarding');
+              }
               else setShowForm(true);
             }}
             className="w-full md:w-auto bg-accentNavy text-white font-sans font-medium py-3 px-12 rounded-xl hover:bg-graphite transition-colors duration-200 shadow-sm text-lg"
