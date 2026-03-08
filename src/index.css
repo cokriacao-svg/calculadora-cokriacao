@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #f8f9fa;
+  --color-graphite: #1e293b;
+  --color-accentGold: #cfa562;
+  --color-accentNavy: #0f172a;
+
+  --font-sans: 'Inter', 'Roboto', sans-serif;
+  --font-serif: 'Playfair Display', 'Merriweather', serif;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-graphite font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
