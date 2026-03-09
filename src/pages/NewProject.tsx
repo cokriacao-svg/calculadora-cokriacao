@@ -3,7 +3,7 @@ import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Calculator, User, MapPin, Layers } from 'lucide-react';
-import { saveOrcamento, getOrcamentos, safeGetItem, type Orcamento } from '../utils/storage';
+import { saveOrcamento, getOrcamentos, type Orcamento } from '../utils/storage';
 
 const ETAPAS_PADRAO = [
   { nome: 'Levantamento Arquitetônico e Cadastral', ativa: true, horas: 10 },
@@ -35,10 +35,7 @@ export function NewProject() {
   // States de Precificação
   const [etapas, setEtapas] = useState(ETAPAS_PADRAO);
   const [valorHora, setValorHora] = useState<number | ''>('');
-  const [despesasGlobais, setDespesasGlobais] = useState<number>(() => {
-    const savedCustos = safeGetItem('arquitetura_custos_fixos');
-    return savedCustos ? Number(savedCustos) : 0;
-  });
+  const [despesasGlobais, setDespesasGlobais] = useState<number>(0);
   const [margemLucro, setMargemLucro] = useState<number>(25);
 
   const [statusOrcamento, setStatusOrcamento] = useState<'Prospecção' | 'Qualificação' | 'Apresentação' | 'Negociação' | 'Fechamento' | 'Perdido'>('Apresentação');
@@ -128,7 +125,7 @@ export function NewProject() {
 
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-serif text-graphite mb-3">
-            {editId ? 'Editar Prospecção' : 'Nova Prospecção Inteligente'}
+            {editId ? 'Editar Orçamento' : 'Novo Orçamento Inteligente'}
           </h1>
           <p className="text-gray-500 font-sans max-w-2xl mx-auto">
             Mapeie com precisão todas as etapas do escopo de arquitetura/interiores e calcule honorários que garantem a sustentabilidade do seu escritório.
@@ -163,7 +160,7 @@ export function NewProject() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
                   <Input 
-                    label="Nome Curto da Prospecção / Orçamento *" 
+                    label="Nome Curto do Projeto / Orçamento *" 
                     placeholder="Ex: Residência Alphaville - Lote 42" 
                     value={nomeProjeto} onChange={e => setNomeProjeto(e.target.value)}
                   />
@@ -179,10 +176,10 @@ export function NewProject() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <Input label="Endereço Completo" placeholder="Localização da Obra/Projeto" value={endereco} onChange={e => setEndereco(e.target.value)} />
+                  <Input label="Endereço Completo" placeholder="Localização da Obra" value={endereco} onChange={e => setEndereco(e.target.value)} />
                 </div>
                 <Input label="Área de Intervenção (m²)" placeholder="Ex: 250" type="number" value={area} onChange={e => setArea(Number(e.target.value) || '')} />
-                <Input label="Tipo de Projeto" placeholder="Residencial, Comercial, Corporativo..." value={tipoProjeto} onChange={e => setTipoProjeto(e.target.value)} />
+                <Input label="Tipo de Uso" placeholder="Residencial, Comercial, Corporativo..." value={tipoProjeto} onChange={e => setTipoProjeto(e.target.value)} />
               </div>
 
               <div className="flex justify-end pt-8 mt-4 border-t border-gray-100">
@@ -198,7 +195,7 @@ export function NewProject() {
               <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
                 <div className="flex items-center gap-3">
                   <Layers size={24} className="text-accentGold" />
-                  <h2 className="text-xl font-serif text-graphite">Escopo da Prospecção (Fases a apresentar)</h2>
+                  <h2 className="text-xl font-serif text-graphite">Escopo do Projeto (Fases de Arquitetura)</h2>
                 </div>
                 <div className="text-sm font-medium text-accentNavy bg-accentNavy/5 px-3 py-1.5 rounded-lg border border-accentNavy/10">
                   Total Estimado: <span className="font-bold">{horasTotais}h</span>
@@ -222,11 +219,6 @@ export function NewProject() {
                       <div className={`font-medium font-sans text-sm ${etapa.ativa ? 'text-graphite' : 'text-gray-400'}`}>
                         {etapa.nome}
                       </div>
-                      {etapa.nome === 'Acompanhamento / Gestão de Obras' && etapa.ativa && (
-                        <div className="text-xs text-accentNavy mt-2 font-sans bg-accentNavy/5 p-2 rounded-lg border border-accentNavy/10">
-                          <strong>Cris Koressawa e sua equipe</strong>, realizam obras, reformas e gestão completa do seu projeto com acompanhamento em tempo real por aplicativo, garantindo mais controle, agilidade e segurança em todas as etapas. Entre em contato (61) 98417-8856.
-                        </div>
-                      )}
                     </div>
                     {etapa.ativa && (
                       <div className="w-32">

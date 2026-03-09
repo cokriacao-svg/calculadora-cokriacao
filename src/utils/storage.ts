@@ -28,25 +28,8 @@ export interface Orcamento {
   notasCRM?: string; // Anotações do funil
 }
 
-export const safeGetItem = (key: string): string | null => {
-  try {
-    return localStorage.getItem(key);
-  } catch (error) {
-    console.warn(`Error reading localStorage key "${key}":`, error);
-    return null;
-  }
-};
-
-export const safeSetItem = (key: string, value: string): void => {
-  try {
-    localStorage.setItem(key, value);
-  } catch (error) {
-    console.warn(`Error setting localStorage key "${key}":`, error);
-  }
-};
-
 export const getOrcamentos = (): Orcamento[] => {
-  const data = safeGetItem('arquitetura_orcamentos');
+  const data = localStorage.getItem('arquitetura_orcamentos');
   if (!data) return [];
   try {
     return JSON.parse(data);
@@ -63,13 +46,13 @@ export const saveOrcamento = (orcamento: Orcamento) => {
   } else {
     orcamentos.push(orcamento);
   }
-  safeSetItem('arquitetura_orcamentos', JSON.stringify(orcamentos));
+  localStorage.setItem('arquitetura_orcamentos', JSON.stringify(orcamentos));
 };
 
 export const deleteOrcamento = (id: string) => {
   const orcamentos = getOrcamentos();
   const filtrados = orcamentos.filter(o => o.id !== id);
-  safeSetItem('arquitetura_orcamentos', JSON.stringify(filtrados));
+  localStorage.setItem('arquitetura_orcamentos', JSON.stringify(filtrados));
 };
 
 export const updateOrcamentoStatus = (id: string, novoStatus: Orcamento['status']) => {
@@ -77,6 +60,6 @@ export const updateOrcamentoStatus = (id: string, novoStatus: Orcamento['status'
   const index = orcamentos.findIndex(o => o.id === id);
   if (index >= 0) {
     orcamentos[index].status = novoStatus;
-    safeSetItem('arquitetura_orcamentos', JSON.stringify(orcamentos));
+    localStorage.setItem('arquitetura_orcamentos', JSON.stringify(orcamentos));
   }
 };
